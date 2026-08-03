@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a5c4e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Ersenbox Kur'an-Dinle 26</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRXJzZW5ib3ggS3VyJ2FuLURpbmxlIDI2Iiwic2hvcnRfbmFtZSI6IkVyc2VuYm94IiwiZGVzY3JpcHRpb24iOiJLdXJuYW4tSSBLZXJpbSBPa3VtYSBVeWd1bGFtYXNpIiwic3RhcnRfdXJsIjoiLi9pbmRleC5odG1sIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2Y1ZjBlOCIsInRoZW1lX2NvbG9yIjoiIzFhNWM0ZSIsImxhbmc6InRyIn0=">
+<style>
+:root {
+  --primary: #1a5c4e;
+  --primary-light: #2d8a75;
+  --accent: #c9956b;
+  --bg: #f5f0e8;
+  --text: #2c2c2c;
+  --card: #ffffff;
+  --border: #e0d8cc;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] {
+  --primary: #2d8a75;
+  --primary-light: #3da88e;
+  --accent: #e8c4a8;
+  --bg: #1a1a1a;
+  --text: #e8e8e8;
+  --card: #2a2a2a;
+  --border: #3a3a3a;
+  --shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  padding-bottom: 100px;
+}
+
+/* Header */
+.app-header {
+  background: var(--primary);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.app-title { font-size: 20px; font-weight: bold; }
+
+.header-actions { display: flex; gap: 8px; }
+
+.btn-icon {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-icon:hover { background: rgba(255,255,255,0.3); }
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 68px;
+  z-index: 99;
+}
+
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  flex: 1;
+  min-width: 80px;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.6;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-tab.active { opacity: 1; border-bottom-color: var(--accent); color: var(--primary); }
+
+/* Views */
+.view { display: none; padding: 16px; }
+.view.active { display: block; }
+
+/* Page Info */
+.page-info-bar {
+  background: var(--card);
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.page-number { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 4px; }
+.page-surah { font-size: 13px; opacity: 0.8; }
+
+/* Mushaf */
+.mushaf-wrapper {
+  background: var(--card);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  position: relative;
+  min-height: 500px;
+}
+
+.mushaf-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: none;
+}
+
+.mushaf-image.loaded { display: block; }
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-secondary { background: var(--accent); }
+.btn-small { padding: 8px 16px; font-size: 12px; }
+
+.page-display {
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 100px;
+  text-align: center;
+  padding: 10px 16px;
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Settings Panel */
+.settings-panel {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.settings-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.setting-label { font-size: 13px; font-weight: 500; }
+
+.setting-control {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.speed-btn, .font-btn, .meal-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 15px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.speed-btn.active, .font-btn.active, .meal-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  background: var(--border);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle.active { background: var(--primary); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle.active::after { transform: translateX(20px); }
+
+/* Meal Section */
+.meal-section {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--accent);
+}
+
+.meal-section.show { display: block; }
+
+.ayah-item {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  border-right: 3px solid var(--accent);
+}
+
+.ayah-arabic {
+  font-size: 24px;
+  text-align: right;
+  direction: rtl;
+  margin-bottom: 10px;
+  line-height: 2;
+  font-family: 'Uthmanic', 'Traditional Arabic', serif;
+}
+
+.ayah-number {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  line-height: 28px;
+  font-size: 12px;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.ayah-turkish {
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Secde Ayetleri */
+.secde-section {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.secde-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.secde-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.secde-item {
+  padding: 10px;
+  background: var(--bg);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  font-size: 12px;
+}
+
+.secde-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.secde-item .surah-name { font-weight: bold; color: var(--primary); }
+.secde-item .ayah-num { color: var(--accent); font-weight: 600; }
+
+/* Audio Player */
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 2px solid var(--border);
+  padding: 12px 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  z-index: 90;
+  display: none;
+}
+
+.audio-player.active { display: block; }
+
+.audio-progress {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.audio-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.1s;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.audio-play-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-info { flex: 1; }
+.audio-reciter { font-size: 12px; font-weight: 600; color: var(--primary); }
+.audio-time { font-size: 11px; opacity: 0.7; }
+
+.audio-nav-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--primary);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Language Selector */
+.lang-selector {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 101;
+}
+
+.lang-selector.show { display: block; }
+
+.lang-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  margin: 4px 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+}
+
+.lang-btn:hover { background: var(--primary); color: white; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .app-title { font-size: 16px; }
+  .page-number { font-size: 16px; }
+  .ayah-arabic { font-size: 20px; }
+  .btn { padding: 10px 18px; font-size: 13px; }
+  .secde-list { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <div class="app-title">📖 Ersenbox Kur'an-Dinle 26</div>
+  <div class="header-actions">
+    <button class="btn-icon" onclick="toggleLangSelector()" title="Dil">🌐</button>
+    <button class="btn-icon" onclick="toggleTheme()" title="Tema">🌙</button>
+    <button class="btn-icon" onclick="toggleBookmark()" title="Kaydet">🔖</button>
+  </div>
+</header>
+
+<!-- Language Selector -->
+<div class="lang-selector" id="langSelector">
+  <button class="lang-btn" onclick="changeLang('tr')">🇹🇷 Türkçe</button>
+  <button class="lang-btn" onclick="changeLang('de')">🇩🇪 Deutsch</button>
+  <button class="lang-btn" onclick="changeLang('en')">🇧 English</button>
+  <button class="lang-btn" onclick="changeLang('fr')">🇫🇷 Français</button>
+</div>
+
+<!-- Navigation -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" data-view="mushaf" onclick="goToView('mushaf')">📖 Mushaf</div>
+  <div class="nav-tab" data-view="secde" onclick="goToView('secde')">۩ Secde</div>
+  <div class="nav-tab" data-view="settings" onclick="goToView('settings')">⚙️ Ayarlar</div>
+</nav>
+
+<!-- MUSHAF VIEW -->
+<div class="view active" id="view-mushaf">
+  <div class="page-info-bar">
+    <div class="page-number" id="pageNumber">Sayfa 1 / 604</div>
+    <div class="page-surah" id="pageSurah">Al-Fatiha</div>
+  </div>
+
+  <div class="mushaf-wrapper">
+    <div class="loading-spinner" id="loader"></div>
+    <img id="mushafImage" class="mushaf-image" alt="Mushaf">
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn" onclick="changePage(-1)" disabled> Önceki</button>
+    <div class="page-display" id="pageDisplay">1 / 604</div>
+    <button class="btn" id="nextBtn" onclick="changePage(1)">Sonraki ▶</button>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-secondary" onclick="toggleMeal()">📖 Meal</button>
+    <button class="btn btn-secondary" onclick="playCurrentPage()">▶ Dinle</button>
+  </div>
+
+  <div class="meal-section" id="mealSection">
+    <div class="settings-title">📖 Meal</div>
+    <div id="mealContent"></div>
+  </div>
+</div>
+
+<!-- SECDE VIEW -->
+<div class="view" id="view-secde">
+  <div class="secde-section">
+    <div class="secde-title">۩ Secde Ayetleri (Hanefi — 14 Ayet)</div>
+    <div class="secde-list" id="secdeList"></div>
+  </div>
+</div>
+
+<!-- SETTINGS VIEW -->
+<div class="view" id="view-settings">
+  <div class="settings-panel">
+    <div class="settings-title"> Oynatma Hızı</div>
+    <div class="setting-control" id="speedControl">
+      <button class="speed-btn" data-speed="0.5">0.5x Çok Yavaş</button>
+      <button class="speed-btn" data-speed="0.75">0.75x Yavaş</button>
+      <button class="speed-btn active" data-speed="1">1x Normal</button>
+      <button class="speed-btn" data-speed="1.25">1.25x Hızlı</button>
+      <button class="speed-btn" data-speed="1.5">1.5x En Hızlı</button>
+      <button class="speed-btn" data-speed="2">2x Çok Hızlı</button>
+    </div>
+  </div>
+
+  <div class="settings-panel">
+    <div class="settings-title"> Meal Kaynağı</div>
+    <div class="setting-control" id="mealControl">
+      <button class="meal-btn active" data-meal="tr.diyanet">🇹🇷 Diyanet</button>
+      <button class="meal-btn" data-meal="tr.elmalili">📚 Elmalılı Hamdi</button>
+      <button class="meal-btn" data-meal="en.sahih">🇬 English</button>
+      <button class="meal-btn" data-meal="de.bubenheim">🇩🇪 Deutsch</button>
+      <button class="meal-btn" data-meal="fr.hamidullah">🇫🇷 Français</button>
+    </div>
+  </div>
+
+  <div class="settings-panel">
+    <div class="settings-title">🎨 Tecvidli Metin</div>
+    <div class="setting-row">
+      <div class="setting-label">Renkli tecvid gösterimi</div>
+      <div class="toggle" id="tajweedToggle" onclick="toggleTajweed()"></div>
+    </div>
+  </div>
+
+  <div class="settings-panel">
+    <div class="settings-title">🔤 Yazı Tipi</div>
+    <div class="setting-control" id="fontControl">
+      <button class="font-btn active" data-font="Uthmanic">Uthmani</button>
+      <button class="font-btn" data-font="'Noto Naskh Arabic'">Noto Naskh</button>
+      <button class="font-btn" data-font="Amiri">Amiri</button>
+      <button class="font-btn" data-font="'Scheherazade New'">Scheherazade</button>
+    </div>
+  </div>
+
+  <div class="settings-panel">
+    <div class="settings-title">🎙️ Okuyucu</div>
+    <div class="setting-control" id="reciterControl">
+      <button class="meal-btn active" data-reciter="ar.alafasy">Alafasy</button>
+      <button class="meal-btn" data-reciter="ar.abdulbasitmurattal">Abdul Basit</button>
+      <button class="meal-btn" data-reciter="ar.hudhaify">Al-Hudhaify</button>
+      <button class="meal-btn" data-reciter="ar.minshawi">Al-Minshawi</button>
+    </div>
+  </div>
+</div>
+
+<!-- Audio Player -->
+<div class="audio-player" id="audioPlayer">
+  <div class="audio-progress" id="audioProgress" onclick="seekAudio(event)">
+    <div class="audio-progress-fill" id="audioProgressFill"></div>
+  </div>
+  <div class="audio-controls">
+    <button class="audio-nav-btn" onclick="playPrevAyah()">⏮</button>
+    <div class="audio-info">
+      <div class="audio-reciter" id="audioReciter">Alafasy</div>
+      <div class="audio-time" id="audioTime">0:00 / 0:00</div>
+    </div>
+    <button class="audio-play-btn" id="audioPlayBtn" onclick="toggleAudio()">▶</button>
+    <button class="audio-nav-btn" onclick="playNextAyah()">⏭</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<audio id="audioEl" preload="auto"></audio>
+
+<script>
+// Translations
+const i18n = {
+  tr: { page: 'Sayfa', previous: 'Önceki', next: 'Sonraki', showMeal: 'Meal', listen: 'Dinle', pause: 'Duraklat', playing: 'Oynatılıyor...', saved: 'kaydedildi', removed: 'kaldırıldı', error: 'Sayfa yüklenemedi' },
+  de: { page: 'Seite', previous: 'Zurück', next: 'Weiter', showMeal: 'Übersetzung', listen: 'Hören', pause: 'Pause', playing: 'Wiedergabe...', saved: 'gespeichert', removed: 'entfernt', error: 'Seite konnte nicht geladen werden' },
+  en: { page: 'Page', previous: 'Previous', next: 'Next', showMeal: 'Translation', listen: 'Listen', pause: 'Pause', playing: 'Playing...', saved: 'saved', removed: 'removed', error: 'Page could not be loaded' },
+  fr: { page: 'Page', previous: 'Précédent', next: 'Suivant', showMeal: 'Traduction', listen: 'Écouter', pause: 'Pause', playing: 'Lecture...', saved: 'enregistré', removed: 'supprimé', error: 'La page n\'a pas pu être chargée' }
+};
+
+// State
+let currentPage = 1;
+const totalPages = 604;
+let currentLang = 'tr';
+let pageAyahs = [];
+let bookmarks = [];
+let audioPlaying = false;
+let currentAyahIndex = 0;
+let settings = {
+  speed: 1,
+  meal: 'tr.diyanet',
+  tajweed: false,
+  font: 'Uthmanic',
+  reciter: 'ar.alafasy',
+  theme: 'light'
+};
+
+// Secde Ayetleri (Hanefi - 14 ayet)
+const secdeAyat = [
+  { surah: 'A\'raf', surahNo: 7, ayah: 206, page: 176 },
+  { surah: 'Ra\'d', surahNo: 13, ayah: 15, page: 261 },
+  { surah: 'Nahl', surahNo: 16, ayah: 49, page: 274 },
+  { surah: 'Isra', surahNo: 17, ayah: 107, page: 293 },
+  { surah: 'Meryem', surahNo: 19, ayah: 58, page: 312 },
+  { surah: 'Hac', surahNo: 22, ayah: 18, page: 332 },
+  { surah: 'Hac', surahNo: 22, ayah: 77, page: 341 },
+  { surah: 'Furkan', surahNo: 25, ayah: 60, page: 367 },
+  { surah: 'Neml', surahNo: 27, ayah: 25, page: 379 },
+  { surah: 'Secde', surahNo: 32, ayah: 15, page: 415 },
+  { surah: 'Sad', surahNo: 38, ayah: 24, page: 454 },
+  { surah: 'Fussilet', surahNo: 41, ayah: 37, page: 480 },
+  { surah: 'Necm', surahNo: 53, ayah: 62, page: 527 },
+  { surah: 'İnşikak', surahNo: 84, ayah: 20, page: 588 }
+];
+
+// Load settings
+try {
+  const saved = localStorage.getItem('ersenbox_settings');
+  if (saved) Object.assign(settings, JSON.parse(saved));
+  const savedBookmarks = localStorage.getItem('ersenbox_bookmarks');
+  if (savedBookmarks) bookmarks = JSON.parse(savedBookmarks);
+} catch(e) {}
+
+// Initialize
+window.addEventListener('DOMContentLoaded', () => {
+  const savedPage = localStorage.getItem('ersenbox_lastPage');
+  currentLang = localStorage.getItem('ersenbox_lang') || 'tr';
+  
+  if (settings.theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  
+  applySettings();
+  renderSecdeList();
+  loadPage(savedPage ? parseInt(savedPage) : 1);
+  setupPWA();
+});
+
+function applySettings() {
+  // Speed buttons
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    btn.classList.toggle('active', parseFloat(btn.dataset.speed) === settings.speed);
+    btn.onclick = () => setSpeed(parseFloat(btn.dataset.speed));
+  });
+  
+  // Meal buttons
+  document.querySelectorAll('.meal-btn[data-meal]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.meal === settings.meal);
+    btn.onclick = () => setMeal(btn.dataset.meal);
+  });
+  
+  // Font buttons
+  document.querySelectorAll('.font-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.font === settings.font);
+    btn.onclick = () => setFont(btn.dataset.font);
+  });
+  
+  // Reciter buttons
+  document.querySelectorAll('.meal-btn[data-reciter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.reciter === settings.reciter);
+    btn.onclick = () => setReciter(btn.dataset.reciter);
+  });
+  
+  // Tajweed toggle
+  document.getElementById('tajweedToggle').classList.toggle('active', settings.tajweed);
+}
+
+function saveSettings() {
+  localStorage.setItem('ersenbox_settings', JSON.stringify(settings));
+}
+
+function setSpeed(speed) {
+  settings.speed = speed;
+  document.getElementById('audioEl').playbackRate = speed;
+  applySettings();
+  saveSettings();
+  showToast(`Hız: ${speed}x`);
+}
+
+function setMeal(meal) {
+  settings.meal = meal;
+  applySettings();
+  saveSettings();
+  if (document.getElementById('mealSection').classList.contains('show')) {
+    loadMeal(currentPage);
+  }
+  showToast(`Meal: ${meal}`);
+}
+
+function setFont(font) {
+  settings.font = font;
+  applySettings();
+  saveSettings();
+  document.querySelectorAll('.ayah-arabic').forEach(el => {
+    el.style.fontFamily = font;
+  });
+  showToast(`Font: ${font}`);
+}
+
+function setReciter(reciter) {
+  settings.reciter = reciter;
+  applySettings();
+  saveSettings();
+  showToast(`Okuyucu: ${reciter}`);
+}
+
+function toggleTajweed() {
+  settings.tajweed = !settings.tajweed;
+  document.getElementById('tajweedToggle').classList.toggle('active', settings.tajweed);
+  saveSettings();
+  if (pageAyahs.length > 0) renderMeal();
+  showToast(settings.tajweed ? 'Tecvid açıldı' : 'Tecvid kapandı');
+}
+
+function changeLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ersenbox_lang', lang);
+  updateTexts();
+  toggleLangSelector();
+  showToast(`Dil: ${lang.toUpperCase()}`);
+}
+
+function updateTexts() {
+  const texts = i18n[currentLang];
+  document.getElementById('pageNumber').textContent = `${texts.page} ${currentPage} / ${totalPages}`;
+  document.getElementById('prevBtn').innerHTML = `◀ ${texts.previous}`;
+  document.getElementById('nextBtn').innerHTML = `${texts.next} ▶`;
+}
+
+function toggleLangSelector() {
+  document.getElementById('langSelector').classList.toggle('show');
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  settings.theme = next;
+  saveSettings();
+}
+
+async function loadPage(pageNum) {
+  if (pageNum < 1 || pageNum > totalPages) return;
+  
+  currentPage = pageNum;
+  localStorage.setItem('ersenbox_lastPage', pageNum);
+  
+  updateTexts();
+  document.getElementById('pageDisplay').textContent = `${pageNum} / ${totalPages}`;
+  document.getElementById('prevBtn').disabled = (pageNum === 1);
+  document.getElementById('nextBtn').disabled = (pageNum === totalPages);
+  
+  const loader = document.getElementById('loader');
+  const img = document.getElementById('mushafImage');
+  
+  loader.style.display = 'block';
+  img.classList.remove('loaded');
+  
+  // Multiple sources
+  const sources = [
+    `https://alquran.cloud/images/page/${pageNum}/ar.alafasy`,
+    `https://quran.com/images/quran-pages/${pageNum}.png`
+  ];
+  
+  let sourceIndex = 0;
+  
+  function tryNextSource() {
+    if (sourceIndex >= sources.length) {
+      loader.style.display = 'none';
+      showToast(i18n[currentLang].error);
+      return;
+    }
+    img.src = sources[sourceIndex];
+    sourceIndex++;
+  }
+  
+  img.onload = function() {
+    loader.style.display = 'none';
+    img.classList.add('loaded');
+  };
+  
+  img.onerror = function() {
+    tryNextSource();
+  };
+  
+  tryNextSource();
+  loadMeal(pageNum);
+}
+
+function changePage(delta) {
+  const newPage = currentPage + delta;
+  if (newPage >= 1 && newPage <= totalPages) {
+    loadPage(newPage);
+  }
+}
+
+async function loadMeal(pageNum) {
+  const content = document.getElementById('mealContent');
+  content.innerHTML = '<div style="text-align:center;padding:20px;">Yükleniyor...</div>';
+  
+  try {
+    const res = await fetch(`https://api.alquran.cloud/v1/page/${pageNum}/${settings.meal}`);
+    const data = await res.json();
+    
+    if (data.code === 200 && data.data.ayahs) {
+      pageAyahs = data.data.ayahs;
+      renderMeal();
+      
+      if (pageAyahs.length > 0) {
+        const first = pageAyahs[0];
+        document.getElementById('pageSurah').textContent = 
+          `${first.surah.englishName} - Ayet ${first.numberInSurah}`;
+      }
+    }
+  } catch (e) {
+    content.innerHTML = '<div style="text-align:center;color:#999;">Meal yüklenemedi</div>';
+  }
+}
+
+function renderMeal() {
+  const content = document.getElementById('mealContent');
+  content.innerHTML = pageAyahs.map(ayah => `
+    <div class="ayah-item">
+      <div class="ayah-arabic" style="font-family: ${settings.font}">
+        <span class="ayah-number">${ayah.numberInSurah}</span>
+        ${ayah.text}
+      </div>
+      <div class="ayah-turkish">${ayah.text}</div>
+    </div>
+  `).join('');
+}
+
+function toggleMeal() {
+  const section = document.getElementById('mealSection');
+  section.classList.toggle('show');
+  if (section.classList.contains('show') && pageAyahs.length === 0) {
+    loadMeal(currentPage);
+  }
+}
+
+function toggleBookmark() {
+  const texts = i18n[currentLang];
+  const index = bookmarks.indexOf(currentPage);
+  
+  if (index > -1) {
+    bookmarks.splice(index, 1);
+    showToast(`🔖 ${currentPage} ${texts.removed}`);
+  } else {
+    bookmarks.push(currentPage);
+    bookmarks.sort((a,b) => a-b);
+    showToast(`🔖 ${currentPage} ${texts.saved}`);
+  }
+  
+  localStorage.setItem('ersenbox_bookmarks', JSON.stringify(bookmarks));
+}
+
+// Audio - KESİNTİSİZ OKUMA
+function playCurrentPage() {
+  if (pageAyahs.length === 0) {
+    showToast('Önce meal yüklenmeli');
+    return;
+  }
+  
+  currentAyahIndex = 0;
+  playAyah(currentAyahIndex);
+}
+
+function playAyah(index) {
+  if (index < 0 || index >= pageAyahs.length) return;
+  
+  const ayah = pageAyahs[index];
+  const audio = document.getElementById('audioEl');
+  const audioUrl = `https://cdn.islamic.network/quran/audio/128/${settings.reciter}/${ayah.number}.mp3`;
+  
+  audio.src = audioUrl;
+  audio.playbackRate = settings.speed;
+  audio.play();
+  
+  audioPlaying = true;
+  document.getElementById('audioPlayer').classList.add('active');
+  document.getElementById('audioPlayBtn').textContent = '⏸';
+  
+  // KESİNTİSİZ - otomatik sonraki ayet
+  audio.onended = function() {
+    if (currentAyahIndex < pageAyahs.length - 1) {
+      currentAyahIndex++;
+      playAyah(currentAyahIndex); // Hiç bekleme yok!
+    } else if (currentPage < totalPages) {
+      // Sonraki sayfaya geç
+      changePage(1);
+      setTimeout(() => {
+        currentAyahIndex = 0;
+        playAyah(0);
+      }, 500);
+    } else {
+      // Bitti
+      audioPlaying = false;
+      document.getElementById('audioPlayBtn').textContent = '▶';
+      showToast('Tamamlandı');
+    }
+  };
+  
+  audio.ontimeupdate = function() {
+    if (audio.duration) {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      document.getElementById('audioProgressFill').style.width = pct + '%';
+      document.getElementById('audioTime').textContent = 
+        formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+    }
+  };
+}
+
+function toggleAudio() {
+  const audio = document.getElementById('audioEl');
+  
+  if (audioPlaying) {
+    audio.pause();
+    audioPlaying = false;
+    document.getElementById('audioPlayBtn').textContent = '▶';
+  } else {
+    if (!audio.src) {
+      playCurrentPage();
+    } else {
+      audio.play();
+      audioPlaying = true;
+      document.getElementById('audioPlayBtn').textContent = '⏸';
+    }
+  }
+}
+
+function playNextAyah() {
+  if (currentAyahIndex < pageAyahs.length - 1) {
+    currentAyahIndex++;
+    playAyah(currentAyahIndex);
+  }
+}
+
+function playPrevAyah() {
+  if (currentAyahIndex > 0) {
+    currentAyahIndex--;
+    playAyah(currentAyahIndex);
+  }
+}
+
+function seekAudio(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const audio = document.getElementById('audioEl');
+  if (audio.duration) {
+    audio.currentTime = pct * audio.duration;
+  }
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+// Secde Ayetleri
+function renderSecdeList() {
+  const list = document.getElementById('secdeList');
+  list.innerHTML = secdeAyat.map((s, i) => `
+    <div class="secde-item" onclick="goToSecde(${s.page})">
+      <div class="surah-name">${i+1}. ${s.surah}</div>
+      <div class="ayah-num">Ayet ${s.ayah}
