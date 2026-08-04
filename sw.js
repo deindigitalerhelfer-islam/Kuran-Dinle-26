@@ -1,83 +1,56 @@
-const CACHE_NAME = 'ersenbox-v3';
+const CACHE_NAME = 'ersenbox-v6';
 const STATIC_ASSETS = ['./', './index.html'];
 
-// Install
+const CACHE_HOSTS = [
+    'cdn.jsdelivr.net', 'quran.islam-db.com', 'raw.githubusercontent.com',
+    'cdn.islamic.network', 'fonts.googleapis.com', 'fonts.gstatic.com'
+];
+
 self.addEventListener('install', (e) => {
-    console.log('[SW] Install');
-    e.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(STATIC_ASSETS);
-        })
-    );
+    e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(STATIC_ASSETS)));
     self.skipWaiting();
 });
 
-// Activate
 self.addEventListener('activate', (e) => {
-    console.log('[SW] Activate');
     e.waitUntil(
-        caches.keys().then((keys) => {
-            return Promise.all(
-                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-            );
-        })
+        caches.keys().then((keys) =>
+            Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+        )
     );
     self.clients.claim();
 });
 
-// Fetch
 self.addEventListener('fetch', (e) => {
-    // Mushaf görsellerini + diğer tüm harici kaynakları cache'le
-    if (
-        e.request.url.includes('quran.islam-db.com') ||
-        e.request.url.includes('cdn.jsdelivr.net') ||
-        e.request.url.includes('raw.githubusercontent.com') ||
-        e.request.url.includes('cdn.islamic.network')
-    ) {
+    const url = e.request.url;
+
+    if (CACHE_HOSTS.some((h) => url.includes(h))) {
         e.respondWith(
             caches.match(e.request).then((cached) => {
-                if (cached) {
-                    console.log('[SW] Cache hit:', e.request.url);
-                    return cached;
-                }
+                if (cached) return cached;
                 return fetch(e.request).then((response) => {
-                    if (!response || response.status !== 200) return response;
-                    const responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(e.request, responseToCache);
-                    });
+                    if (response && (response.ok || response.type === 'opaque')) {
+                        const copy = response.clone();
+                        caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
+                    }
                     return response;
-                }).catch(() => {
-                    console.log('[SW] Fetch failed');
-                    return caches.match('./index.html');
-                });
+                }).catch(() => caches.match('./index.html'));
             })
         );
         return;
     }
 
-    // API istekleri (meal, ayet bilgileri)
-    if (e.request.url.includes('api.alquran.cloud')) {
+    if (url.includes('api.alquran.cloud')) {
         e.respondWith(
             fetch(e.request).then((response) => {
                 if (response.ok) {
-                    const responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(e.request, responseToCache);
-                    });
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
                 }
                 return response;
-            }).catch(() => {
-                return caches.match(e.request);
-            })
+            }).catch(() => caches.match(e.request))
         );
         return;
     }
 
-    // Diğer istekler
-    e.respondWith(
-        caches.match(e.request).then((cached) => {
-            return cached || fetch(e.request);
-        })
-    );
+    e.respondWith(caches.match(e.request).then((cached) => cached || fetch(e.request)));
 });
