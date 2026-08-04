@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ersenbox-v10';
+const CACHE_NAME = 'ersenbox-v11';
 const STATIC_ASSETS = ['./', './index.html'];
 const CACHE_HOSTS = ['cdn.jsdelivr.net','quran.islam-db.com','raw.githubusercontent.com','cdn.islamic.network','fonts.googleapis.com','fonts.gstatic.com','api.qrserver.com'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(STATIC_ASSETS))); self.skipWaiting(); });
