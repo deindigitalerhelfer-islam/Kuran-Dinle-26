@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ersenbox-v6';
+const CACHE_NAME = 'ersenbox-v7';
 const STATIC_ASSETS = ['./', './index.html'];
 
 const CACHE_HOSTS = [
@@ -23,6 +23,7 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
     const url = e.request.url;
 
+    // Görsel + ses + font → ÖNCE ÖNBELLEK (offline çalışır)
     if (CACHE_HOSTS.some((h) => url.includes(h))) {
         e.respondWith(
             caches.match(e.request).then((cached) => {
@@ -39,6 +40,7 @@ self.addEventListener('fetch', (e) => {
         return;
     }
 
+    // API → önce internet, yoksa önbellek
     if (url.includes('api.alquran.cloud')) {
         e.respondWith(
             fetch(e.request).then((response) => {

@@ -19,21 +19,34 @@
         :root {
             --bg1:#f5f0e8; --bg2:#e8e0d0; --card:#ffffff; --panel:#f5f0e8;
             --text:#333333; --muted:#666666; --accent:#1a5c4e; --accent2:#2d7a6b;
-            --arabic-font:'Amiri',serif; --zoom:1;
+            --arabic-font:'Amiri',serif; --zoom:1; --gold:#d4af37;
         }
         body.dark {
             --bg1:#101413; --bg2:#0b0f0e; --card:#1b2422; --panel:#16201d;
             --text:#e6e6e6; --muted:#9fb3ad; --accent:#2d7a6b; --accent2:#3a917f;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%); min-height:100vh; overflow-x:hidden; }
-        .container { max-width:1200px; margin:0 auto; background:var(--card); min-height:100vh; box-shadow:0 0 20px rgba(0,0,0,.1); }
+        /* YAN BOŞLUKLAR: İslami desen + koyudan açığa degrade */
+        body {
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.14'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cpath d='M0 0H80M0 80H80M0 0V80M80 0V80'/%3E%3C/g%3E%3C/svg%3E") repeat,
+                linear-gradient(180deg, #072b23 0%, #1a5c4e 35%, #cbbfa8 100%);
+            background-attachment: fixed;
+            min-height:100vh; overflow-x:hidden;
+        }
+        body.dark {
+            background:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.07'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cpath d='M0 0H80M0 80H80M0 0V80M80 0V80'/%3E%3C/g%3E%3C/svg%3E") repeat,
+                linear-gradient(180deg, #020403 0%, #0b352c 40%, #101413 100%);
+            background-attachment: fixed;
+        }
+        .container { max-width:1200px; margin:0 auto; background:var(--card); min-height:100vh; box-shadow:0 0 30px rgba(0,0,0,.35); }
         header { background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%); color:#fff; padding:20px; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,.1); position:sticky; top:0; z-index:100; }
         header h1 { font-size:24px; margin-bottom:10px; }
         .header-buttons { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:15px; }
         .header-btn { background:rgba(255,255,255,.2); border:2px solid #fff; color:#fff; padding:8px 16px; border-radius:20px; cursor:pointer; font-size:14px; transition:all .3s; display:flex; align-items:center; gap:5px; }
         .header-btn:hover { background:#fff; color:var(--accent); }
-        /* DİL MENÜSÜ */
         .lang-wrap { position:relative; display:inline-block; }
         .lang-menu { display:none; position:absolute; top:115%; left:50%; transform:translateX(-50%); background:var(--card); border:2px solid var(--accent); border-radius:12px; z-index:300; min-width:170px; box-shadow:0 8px 20px rgba(0,0,0,.3); overflow:hidden; }
         .lang-menu.open { display:block; }
@@ -48,7 +61,6 @@
         .page-info { text-align:center; flex:1; }
         .page-display { font-size:18px; font-weight:bold; color:var(--accent); margin-bottom:5px; }
         .page-title { font-size:14px; color:var(--muted); }
-        /* ZOOM ÇUBUĞU */
         .zoom-bar { display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:12px; }
         .zoom-btn { background:var(--accent); color:#fff; border:none; width:44px; height:44px; border-radius:50%; font-size:16px; font-weight:bold; cursor:pointer; }
         .zoom-btn:hover { background:var(--accent2); }
@@ -65,7 +77,6 @@
         .tw-ghunnah { color:#0a8f3c; } .tw-madd { color:#d23b3b; } .tw-qalqalah { color:#1867c0; } .tw-ikhfa { color:#8a3bd0; }
         body.dark .tw-ghunnah { color:#4ade80; } body.dark .tw-madd { color:#f87171; }
         body.dark .tw-qalqalah { color:#60a5fa; } body.dark .tw-ikhfa { color:#c084fc; }
-        /* TAKİP (okunan ayet vurgusu) */
         .playing { outline:3px solid #d23b3b; background:rgba(210,59,59,.10); }
         .playing .ayah-number, .playing .tajweed-num { background:#d23b3b; }
         .playing::after { content:' 🔊'; }
@@ -73,7 +84,7 @@
         .action-btn { background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%); color:#fff; border:none; padding:15px 30px; border-radius:12px; cursor:pointer; font-size:16px; font-weight:bold; transition:all .3s; display:flex; align-items:center; gap:8px; }
         .action-btn:hover { transform:translateY(-2px); }
         .action-btn.on { outline:3px solid #e0a458; }
-        .meal-container, .latin-container { background:var(--panel); border-radius:12px; padding:20px; margin-bottom:20px; }
+        .meal-container, .latin-container, .list-panel { background:var(--panel); border-radius:12px; padding:20px; margin-bottom:20px; }
         .meal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding-bottom:15px; border-bottom:2px solid var(--accent); flex-wrap:wrap; gap:10px; }
         .meal-title { font-size:20px; font-weight:bold; color:var(--accent); }
         .mini-btn { background:var(--card); border:2px solid var(--accent); color:var(--text); padding:6px 14px; border-radius:8px; cursor:pointer; font-size:13px; }
@@ -85,11 +96,18 @@
         .ayah-translation { color:var(--muted); font-size:calc(15px * var(--zoom)); }
         .latin-item { background:var(--card); border-radius:8px; padding:10px 15px; margin-bottom:8px; color:var(--text); font-style:italic; font-size:calc(16px * var(--zoom)); transition:all .3s; }
         .latin-item b { color:var(--accent); font-style:normal; margin-right:8px; }
+        /* ARAMA + LİSTELER */
+        .search-input { flex:1; min-width:200px; padding:12px; border-radius:8px; border:2px solid var(--accent); background:var(--card); color:var(--text); font-size:16px; }
+        .list-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px; max-height:50vh; overflow:auto; }
+        .list-item { background:var(--card); color:var(--text); padding:10px 12px; border-radius:8px; cursor:pointer; border-left:4px solid var(--accent); font-size:14px; display:flex; justify-content:space-between; align-items:center; gap:6px; }
+        .list-item:hover { background:var(--accent); color:#fff; }
+        .sajda-mark { color:var(--gold); font-weight:bold; font-size:18px; text-shadow:0 0 6px rgba(212,175,55,.6); }
+        .list-note { margin-top:10px; font-size:12px; color:var(--muted); }
         .audio-player { background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%); color:#fff; padding:20px; border-radius:12px; margin-bottom:20px; }
         .audio-controls { display:flex; align-items:center; gap:15px; justify-content:center; }
         .audio-btn { background:rgba(255,255,255,.2); border:2px solid #fff; color:#fff; width:50px; height:50px; border-radius:50%; cursor:pointer; font-size:20px; display:flex; align-items:center; justify-content:center; }
         .audio-btn:hover { background:#fff; color:var(--accent); }
-        .audio-progress { height:6px; background:rgba(255,255,255,.3); border-radius:3px; overflow:hidden; margin-top:15px; }
+        .audio-progress { height:6px; background:rgba(0,0,0,.15); border-radius:3px; overflow:hidden; margin-top:15px; }
         .audio-progress-bar { height:100%; background:#fff; width:0%; }
         .settings-panel { background:var(--panel); border-radius:12px; padding:20px; margin-bottom:20px; display:none; }
         .settings-panel.active { display:block; }
@@ -105,6 +123,7 @@
         .sajda-list { background:var(--panel); border-radius:12px; padding:20px; margin-bottom:20px; }
         .sajda-title { font-size:18px; font-weight:bold; color:var(--accent); margin-bottom:15px; }
         .sajda-item { background:var(--card); color:var(--text); padding:12px; border-radius:8px; margin-bottom:8px; cursor:pointer; border-left:4px solid var(--accent); }
+        #offlineStatus { margin-top:8px; color:var(--muted); font-size:13px; }
         @media (max-width:768px) {
             .main-content { padding:10px; }
             header h1 { font-size:18px; }
@@ -120,14 +139,17 @@
             <h1>📖 Ersenbox Kur'an-Dinle 26</h1>
             <div class="header-buttons">
                 <div class="lang-wrap">
-                    <button class="header-btn" id="langBtn" onclick="toggleLangMenu(event)">🇹</button>
+                    <button class="header-btn" id="langBtn" onclick="toggleLangMenu(event)">🇹🇷</button>
                     <div class="lang-menu" id="langMenu">
                         <div class="lang-item" onclick="setLang('tr')"><span class="flag">🇹🇷</span> Türkçe</div>
-                        <div class="lang-item" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</div>
+                        <div class="lang-item" onclick="setLang('en')"><span class="flag">🇬</span> English</div>
                         <div class="lang-item" onclick="setLang('de')"><span class="flag">🇩🇪</span> Deutsch</div>
                         <div class="lang-item" onclick="setLang('fr')"><span class="flag">🇫🇷</span> Français</div>
                     </div>
                 </div>
+                <button class="header-btn" id="surahBtn" onclick="toggleSurahList()">📚 Sure</button>
+                <button class="header-btn" id="juzBtn" onclick="toggleJuzList()">📖 Cüz</button>
+                <button class="header-btn" id="searchBtn" onclick="toggleSearch()">🔍 Ara</button>
                 <button class="header-btn" id="themeBtn" onclick="toggleDarkMode()">🌙</button>
                 <button class="header-btn" id="bookmarkBtn" onclick="saveBookmark()">🔖</button>
                 <button class="header-btn" id="sajdahHeaderBtn" onclick="showSajdaAyat()">۩ Secde</button>
@@ -136,6 +158,26 @@
         </header>
 
         <div class="main-content">
+            <div class="list-panel" id="searchPanel" style="display:none;">
+                <div class="sajda-title" id="searchTitleEl">🔍 Sure / Cüz Ara</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <input id="searchInput" class="search-input" placeholder="Örn: Yasin, Mülk, 36, Cüz 5" onkeydown="if(event.key==='Enter')doSearch()">
+                    <button class="nav-btn" onclick="doSearch()">🔍 Bul</button>
+                </div>
+            </div>
+
+            <div class="list-panel" id="surahPanel" style="display:none;">
+                <div class="sajda-title" id="surahTitleEl">📚 Sure Listesi (114)</div>
+                <div class="list-grid" id="surahContent"></div>
+                <div class="list-note" id="surahNoteEl"><span class="sajda-mark">۩</span> = içinde secde ayeti var</div>
+            </div>
+
+            <div class="list-panel" id="juzPanel" style="display:none;">
+                <div class="sajda-title" id="juzTitleEl">📖 Cüz Listesi (30)</div>
+                <div class="list-grid" id="juzContent"></div>
+                <div class="list-note" id="juzNoteEl"><span class="sajda-mark">۩</span> = içinde secde ayeti var</div>
+            </div>
+
             <div class="page-nav">
                 <button class="nav-btn" id="prevBtn" onclick="previousPage()">◀ Önceki</button>
                 <div class="page-info">
@@ -146,9 +188,9 @@
             </div>
 
             <div class="zoom-bar">
-                <button class="zoom-btn" onclick="zoomChange(-0.1)" title="Küçült">A−</button>
+                <button class="zoom-btn" onclick="zoomChange(-0.1)">A−</button>
                 <span class="zoom-label" id="zoomLabel">%100</span>
-                <button class="zoom-btn" onclick="zoomChange(0.1)" title="Büyüt">A+</button>
+                <button class="zoom-btn" onclick="zoomChange(0.1)">A+</button>
             </div>
 
             <div class="mushaf-container" id="mushafContainer">
@@ -195,6 +237,22 @@
                     <button class="setting-option" id="gotoBookmarkBtn" style="display:none;" onclick="gotoBookmark()"></button>
                 </div>
                 <div class="setting-group">
+                    <label class="setting-label" id="offlineLabel">⬇️ Çevrimdışı (Offline) Modu</label>
+                    <div class="setting-options">
+                        <button class="setting-option" onclick="downloadPageOfflineUI()">📥 Bu Sayfayı İndir</button>
+                        <button class="setting-option" onclick="downloadRangeOffline(1,20)">📦 1–20</button>
+                        <button class="setting-option" onclick="downloadRangeOffline(1,604)">🗂️ Tümü (604)</button>
+                        <button class="setting-option" onclick="cancelOffline()">⛔ İptal</button>
+                        <button class="setting-option" onclick="clearAllCache()">🗑️ Önbelleği Temizle</button>
+                    </div>
+                    <div class="setting-options" style="margin-top:10px;">
+                        <button class="setting-option active" data-group="oq" data-value="ekonomi" onclick="setOfflineQuality('ekonomi')">🪶 Ekonomik (az yer)</button>
+                        <button class="setting-option" data-group="oq" data-value="yuksek" onclick="setOfflineQuality('yuksek')">💎 Yüksek Kalite</button>
+                    </div>
+                    <div class="audio-progress" style="margin-top:10px;height:8px;"><div class="audio-progress-bar" id="offlineBar" style="background:var(--accent);width:0%;"></div></div>
+                    <div id="offlineStatus"></div>
+                </div>
+                <div class="setting-group">
                     <label class="setting-label" id="followLabel">🎯 Takip (Okunan Ayet Vurgusu)</label>
                     <div class="setting-options">
                         <button class="setting-option active" id="followBtn" onclick="toggleFollow()">Okunan ayeti vurgula + takip et</button>
@@ -228,11 +286,11 @@
                 <div class="setting-group">
                     <label class="setting-label" id="mealSourceLabel">📚 Meal Kaynağı</label>
                     <div class="setting-options">
-                        <button class="setting-option active" data-group="meal" data-value="tr.diyanet" onclick="setMeal('tr.diyanet')">🇹 Diyanet</button>
+                        <button class="setting-option active" data-group="meal" data-value="tr.diyanet" onclick="setMeal('tr.diyanet')">🇹🇷 Diyanet</button>
                         <button class="setting-option" data-group="meal" data-value="tr.yazir" onclick="setMeal('tr.yazir')">📚 Elmalılı Hamdi</button>
-                        <button class="setting-option" data-group="meal" data-value="en.sahih" onclick="setMeal('en.sahih')">🇬 English</button>
+                        <button class="setting-option" data-group="meal" data-value="en.sahih" onclick="setMeal('en.sahih')">🇬🇧 English</button>
                         <button class="setting-option" data-group="meal" data-value="de.aburida" onclick="setMeal('de.aburida')">🇩🇪 Deutsch</button>
-                        <button class="setting-option" data-group="meal" data-value="fr.hamidullah" onclick="setMeal('fr.hamidullah')">🇫🇷 Français</button>
+                        <button class="setting-option" data-group="meal" data-value="fr.hamidullah" onclick="setMeal('fr.hamidullah')">🇫 Français</button>
                     </div>
                 </div>
                 <div class="setting-group">
@@ -276,6 +334,9 @@
         let mushafStyle = localStorage.getItem('ersenbox_style') || 'klasik';
         let zoom = parseFloat(localStorage.getItem('ersenbox_zoom')) || 1;
         let brIndex = 0;
+        let offlineCancel = false;
+        let offlineBusy = false;
+        let offlineQuality = localStorage.getItem('ersenbox_oq') || 'ekonomi';
 
         const settings = Object.assign(
             { meal:'tr.diyanet', reciter:'ar.alafasy', speed:1, font:'uthmani', tajweed:false, follow:true },
@@ -283,7 +344,6 @@
         );
         const saveSettings = () => localStorage.setItem('ersenbox_settings', JSON.stringify(settings));
 
-        /* ================= OKUYUCULAR (bitrate yedekli) ================= */
         const RECITERS = {
             'ar.alafasy':            { name:'Mishary Alafasy',        br:[128,64] },
             'ar.abdulbasitmurattal': { name:'Abdul Basit',            br:[192,64] },
@@ -296,15 +356,22 @@
             'ar.muhammadayyoub':     { name:'Muhammad Ayyoub',        br:[64,128] },
             'ar.yasserdossari':      { name:'Yasser Dossari',         br:[128,64] }
         };
+        const FLAG = { tr:'🇹🇷', en:'🇬', de:'🇩', fr:'🇷' };
 
-        const FLAG = { tr:'🇹🇷', en:'🇬🇧', de:'🇩🇪', fr:'🇫🇷' };
+        /* SURE BAŞLANGIÇ SAYFALARI (114) */
+        const SURAH_PAGES = [1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
+        /* CÜZ BAŞLANGIÇ SAYFALARI (30) */
+        const JUZ_PAGES = [1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582];
+        const SAJDA_AYATS = [[7,206],[13,15],[16,49],[17,107],[19,58],[22,18],[25,60],[27,25],[32,15],[38,24],[41,37],[53,62],[84,21],[96,19]];
+        const SAJDA_SURAHS = SAJDA_AYATS.map(s => s[0]);
+        const SAJDA_JUZ = [9,13,14,15,16,17,19,21,23,24,27,30];
+        const FONT_MAP = { uthmani:"'Amiri',serif", noto:"'Noto Naskh Arabic',serif", amiri:"'Amiri',serif", scheherazade:"'Scheherazade New',serif" };
 
-        /* ================= ÇEVİRİLER ================= */
         const I18N = {
-            tr:{prev:'◀ Önceki',next:'Sonraki ▶',meal:'📖 Meal',listen:'▶ Dinle',latin:'🔤 Latince',sajdah:'۩ Secde',settings:'⚙️ Ayarlar',speed:'⚡ Oynatma Hızı',mealSource:'📚 Meal Kaynağı',font:'🔤 Yazı Tipi',reciter:'🎙️ Okuyucu',tajweed:'🎨 Tecvidli Metin',tajweedDesc:'Renkli tecvid gösterimi',sajdahTitle:'۩ Secde Ayetleri (Hanefi — 14 Ayet)',mealTitle:'📖 Meal',latinTitle:'🔤 Latince Okunuş',loading:'Yükleniyor...',mealError:'Meal yüklenemedi',latinError:'Transkript yüklenemedi',loadError:'❌ Sayfa yüklenemedi',loaded:'✅ Sayfa %s yüklendi',bookmarkSaved:'🔖 Sayfa %s kaydedildi',gotoBookmark:'🔖 Kayıtlı Sayfaya Git (Sayfa %s)',noBookmark:'🔖 Henüz kayıtlı sayfa yok',themeOn:'🌙 Gece modu',themeOff:'☀️ Gündüz modu',langChanged:'Dil: Türkçe',tajweedOn:'🎨 Renkli tecvid AÇIK',tajweedOff:'🎨 Tecvid kapalı',speedSet:'⚡ Hız: %sx',goingPage:'➡️ Sayfa %s...',style:'🖼️ Mushaf Stili',styleSet:'🖼️ Stil: %s',reciterSet:'🎙️ Okuyucu: %s',fontSet:'🔤 Yazı tipi: %s',mealSet:'📚 Meal: %s',follow:'🎯 Takip (Okunan Ayet Vurgusu)',followDesc:'Okunan ayeti vurgula + takip et',followOn:'🎯 Takip AÇIK',followOff:'🎯 Takip kapalı',audioFail:'❌ Ses bulunamadı: %s'},
-            en:{prev:'◀ Previous',next:'Next ▶',meal:'📖 Translation',listen:'▶ Listen',latin:'🔤 Latin',sajdah:'۩ Sajdah',settings:'⚙️ Settings',speed:'⚡ Speed',mealSource:'📚 Source',font:'🔤 Font',reciter:'🎙️ Reciter',tajweed:'🎨 Tajweed',tajweedDesc:'Colored tajweed',sajdahTitle:'۩ Sajdah Verses (14)',mealTitle:'📖 Translation',latinTitle:'🔤 Transliteration',loading:'Loading...',mealError:'Failed',latinError:'Failed',loadError:'❌ Load failed',loaded:'✅ Page %s loaded',bookmarkSaved:'🔖 Page %s saved',gotoBookmark:'🔖 Go to Bookmark (%s)',noBookmark:'🔖 No bookmark',themeOn:'🌙 Night',themeOff:'☀️ Day',langChanged:'Language: English',tajweedOn:'🎨 Tajweed ON',tajweedOff:'🎨 Tajweed off',speedSet:'⚡ %sx',goingPage:'➡️ Page %s...',style:'🖼️ Style',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Follow (Ayah Highlight)',followDesc:'Highlight + follow playing ayah',followOn:'🎯 Follow ON',followOff:'🎯 Follow off',audioFail:'❌ Audio not found: %s'},
-            de:{prev:'◀ Zurück',next:'Weiter ▶',meal:'📖 Übersetzung',listen:'▶ Anhören',latin:'🔤 Latein',sajdah:'۩ Sajda',settings:'⚙️ Einstellungen',speed:'⚡ Tempo',mealSource:'📚 Quelle',font:'🔤 Schriftart',reciter:'🎙️ Rezitator',tajweed:'🎨 Tadschwid',tajweedDesc:'Farbiges Tadschwid',sajdahTitle:'۩ Sajda-Verse (14)',mealTitle:'📖 Übersetzung',latinTitle:'🔤 Umschrift',loading:'Laden...',mealError:'Fehler',latinError:'Fehler',loadError:'❌ Ladefehler',loaded:'✅ Seite %s',bookmarkSaved:'🔖 Seite %s',gotoBookmark:'🔖 Zum Lesezeichen (%s)',noBookmark:'🔖 Kein Lesezeichen',themeOn:'🌙 Nacht',themeOff:'☀️ Tag',langChanged:'Sprache: Deutsch',tajweedOn:'🎨 Tadschwid AN',tajweedOff:'🎨 Aus',speedSet:'⚡ %sx',goingPage:'➡️ Seite %s...',style:'🖼️ Stil',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Folgen (Vers-Hervorhebung)',followDesc:'Aktiven Vers hervorheben',followOn:'🎯 Folgen AN',followOff:'🎯 Folgen aus',audioFail:'❌ Audio fehlt: %s'},
-            fr:{prev:'◀ Précédent',next:'Suivant ▶',meal:'📖 Traduction',listen:'▶ Écouter',latin:'🔤 Latin',sajdah:'۩ Sajda',settings:'⚙️ Paramètres',speed:'⚡ Vitesse',mealSource:'📚 Source',font:'🔤 Police',reciter:'🎙️ Récitateur',tajweed:'🎨 Tajwid',tajweedDesc:'Tajwid coloré',sajdahTitle:'۩ Versets de sajda (14)',mealTitle:'📖 Traduction',latinTitle:'🔤 Translittération',loading:'Chargement...',mealError:'Échec',latinError:'Échec',loadError:'❌ Échec',loaded:'✅ Page %s',bookmarkSaved:'🔖 Page %s',gotoBookmark:'🔖 Signet (%s)',noBookmark:'🔖 Aucun signet',themeOn:'🌙 Nuit',themeOff:'☀️ Jour',langChanged:'Langue : Français',tajweedOn:'🎨 Tajwid ON',tajweedOff:'🎨 Off',speedSet:'⚡ %sx',goingPage:'➡️ Page %s...',style:'🖼️ Style',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Suivi (Surbrillance)',followDesc:'Surligner le verset joué',followOn:'🎯 Suivi ON',followOff:'🎯 Suivi off',audioFail:'❌ Audio introuvable : %s'}
+            tr:{prev:'◀ Önceki',next:'Sonraki ▶',meal:'📖 Meal',listen:'▶ Dinle',latin:'🔤 Latince',sajdah:'۩ Secde',settings:'⚙️ Ayarlar',speed:'⚡ Oynatma Hızı',mealSource:'📚 Meal Kaynağı',font:'🔤 Yazı Tipi',reciter:'🎙️ Okuyucu',tajweed:'🎨 Tecvidli Metin',tajweedDesc:'Renkli tecvid gösterimi',sajdahTitle:'۩ Secde Ayetleri (Hanefi — 14 Ayet)',mealTitle:'📖 Meal',latinTitle:'🔤 Latince Okunuş',loading:'Yükleniyor...',mealError:'Meal yüklenemedi',latinError:'Transkript yüklenemedi',loadError:'❌ Sayfa yüklenemedi',loaded:'✅ Sayfa %s yüklendi',bookmarkSaved:'🔖 Sayfa %s kaydedildi',gotoBookmark:'🔖 Kayıtlı Sayfaya Git (Sayfa %s)',noBookmark:'🔖 Henüz kayıtlı sayfa yok',themeOn:'🌙 Gece modu',themeOff:'☀️ Gündüz modu',langChanged:'Dil: Türkçe',tajweedOn:'🎨 Renkli tecvid AÇIK',tajweedOff:'🎨 Tecvid kapalı',speedSet:'⚡ Hız: %sx',style:'🖼️ Mushaf Stili',styleSet:'🖼️ Stil: %s',reciterSet:'🎙️ Okuyucu: %s',fontSet:'🔤 Yazı tipi: %s',mealSet:'📚 Meal: %s',follow:'🎯 Takip (Okunan Ayet Vurgusu)',followDesc:'Okunan ayeti vurgula + takip et',followOn:'🎯 Takip AÇIK',followOff:'🎯 Takip kapalı',audioFail:'❌ Ses bulunamadı: %s',offline:'⬇️ Çevrimdışı (Offline) Modu',surah:'📚 Sure',juz:'📖 Cüz',search:'🔍 Ara',searchTitle:'🔍 Sure / Cüz Ara',searchPh:'Örn: Yasin, Mülk, 36, Cüz 5',surahTitle:'📚 Sure Listesi (114)',juzTitle:'📖 Cüz Listesi (30)',listNote:'۩ = içinde secde ayeti var',notFound:'❌ Bulunamadı'},
+            en:{prev:'◀ Previous',next:'Next ▶',meal:'📖 Translation',listen:'▶ Listen',latin:'🔤 Latin',sajdah:'۩ Sajdah',settings:'⚙️ Settings',speed:'⚡ Speed',mealSource:'📚 Source',font:'🔤 Font',reciter:'🎙️ Reciter',tajweed:'🎨 Tajweed',tajweedDesc:'Colored tajweed',sajdahTitle:'۩ Sajdah Verses (14)',mealTitle:'📖 Translation',latinTitle:'🔤 Transliteration',loading:'Loading...',mealError:'Failed',latinError:'Failed',loadError:'❌ Load failed',loaded:'✅ Page %s loaded',bookmarkSaved:'🔖 Page %s saved',gotoBookmark:'🔖 Bookmark (%s)',noBookmark:'🔖 No bookmark',themeOn:'🌙 Night',themeOff:'☀️ Day',langChanged:'Language: English',tajweedOn:'🎨 Tajweed ON',tajweedOff:'🎨 Off',speedSet:'⚡ %sx',style:'🖼️ Style',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Follow',followDesc:'Highlight playing ayah',followOn:'🎯 ON',followOff:'🎯 Off',audioFail:'❌ Audio missing: %s',offline:'⬇️ Offline Mode',surah:'📚 Surah',juz:' Juz',search:'🔍 Search',searchTitle:'🔍 Search Surah / Juz',searchPh:'e.g. Yasin, Mulk, 36, Juz 5',surahTitle:'📚 Surah List (114)',juzTitle:'📖 Juz List (30)',listNote:'۩ = contains sajdah verse',notFound:'❌ Not found'},
+            de:{prev:'◀ Zurück',next:'Weiter ▶',meal:'📖 Übersetzung',listen:'▶ Anhören',latin:'🔤 Latein',sajdah:'۩ Sajda',settings:'⚙️ Einstellungen',speed:'⚡ Tempo',mealSource:'📚 Quelle',font:'🔤 Schriftart',reciter:'🎙️ Rezitator',tajweed:'🎨 Tadschwid',tajweedDesc:'Farbiges Tadschwid',sajdahTitle:'۩ Sajda-Verse (14)',mealTitle:'📖 Übersetzung',latinTitle:'🔤 Umschrift',loading:'Laden...',mealError:'Fehler',latinError:'Fehler',loadError:'❌ Ladefehler',loaded:'✅ Seite %s',bookmarkSaved:'🔖 Seite %s',gotoBookmark:'🔖 Lesezeichen (%s)',noBookmark:'🔖 Kein Lesezeichen',themeOn:'🌙 Nacht',themeOff:'☀️ Tag',langChanged:'Sprache: Deutsch',tajweedOn:'🎨 AN',tajweedOff:'🎨 Aus',speedSet:'⚡ %sx',style:'🖼️ Stil',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Folgen',followDesc:'Vers hervorheben',followOn:'🎯 AN',followOff:'🎯 Aus',audioFail:'❌ Audio fehlt: %s',offline:'⬇️ Offline-Modus',surah:'📚 Sure',juz:'📖 Juz',search:'🔍 Suche',searchTitle:'🔍 Sure / Juz suchen',searchPh:'z.B. Yasin, 36, Juz 5',surahTitle:'📚 Surenliste (114)',juzTitle:'📖 Juz-Liste (30)',listNote:'۩ = mit Sajda-Vers',notFound:'❌ Nicht gefunden'},
+            fr:{prev:'◀ Précédent',next:'Suivant ▶',meal:'📖 Traduction',listen:'▶ Écouter',latin:'🔤 Latin',sajdah:'۩ Sajda',settings:'⚙️ Paramètres',speed:'⚡ Vitesse',mealSource:'📚 Source',font:'🔤 Police',reciter:'🎙️ Récitateur',tajweed:'🎨 Tajwid',tajweedDesc:'Tajwid coloré',sajdahTitle:'۩ Versets de sajda (14)',mealTitle:'📖 Traduction',latinTitle:'🔤 Translittération',loading:'Chargement...',mealError:'Échec',latinError:'Échec',loadError:'❌ Échec',loaded:'✅ Page %s',bookmarkSaved:'🔖 Page %s',gotoBookmark:'🔖 Signet (%s)',noBookmark:'🔖 Aucun signet',themeOn:'🌙 Nuit',themeOff:'☀️ Jour',langChanged:'Langue : Français',tajweedOn:'🎨 ON',tajweedOff:'🎨 Off',speedSet:'⚡ %sx',style:'🖼️ Style',styleSet:'🖼️ %s',reciterSet:'🎙️ %s',fontSet:'🔤 %s',mealSet:'📚 %s',follow:'🎯 Suivi',followDesc:'Surligner le verset',followOn:'🎯 ON',followOff:'🎯 Off',audioFail:'❌ Audio introuvable : %s',offline:'⬇️ Mode hors ligne',surah:'📚 Sourate',juz:'📖 Juz',search:'🔍 Rechercher',searchTitle:'🔍 Rechercher Sourate / Juz',searchPh:'ex. Yasin, 36, Juz 5',surahTitle:'📚 Liste des sourates (114)',juzTitle:'📖 Liste des Juz (30)',listNote:'۩ = contient verset de sajda',notFound:'❌ Introuvable'}
         };
         const T = (key, val) => {
             let s = (I18N[currentLang] || I18N.tr)[key] || I18N.tr[key] || key;
@@ -312,8 +379,6 @@
         };
 
         const SURAH_TR = ['','Fâtiha','Bakara','Âl-i İmrân','Nisâ','Mâide','En\'âm','A\'râf','Enfâl','Tevbe','Yûnus','Hûd','Yûsuf','Ra\'d','İbrâhîm','Hicr','Nahl','İsrâ','Kehf','Meryem','Tâhâ','Enbiyâ','Hac','Mü\'minûn','Nûr','Furkân','Şuarâ','Neml','Kasas','Ankebût','Rûm','Lokmân','Secde','Ahzâb','Sebe\'','Fâtır','Yâsîn','Sâffât','Sâd','Zümer','Mü\'min','Fussilet','Şûrâ','Zuhruf','Duhân','Câsiye','Ahkâf','Muhammed','Fetih','Hucurât','Kâf','Zâriyât','Tûr','Necm','Kamer','Rahmân','Vâkıa','Hadîd','Mücâdele','Haşr','Mümtehine','Saf','Cum\'a','Münâfikûn','Teğâbün','Talâk','Tahrîm','Mülk','Kalem','Hâkka','Meâric','Nûh','Cin','Müzzemmil','Müddessir','Kıyâmet','İnsân','Mürselât','Nebe\'','Nâziât','Abese','Tekvîr','İnfitâr','Mutaffifîn','İnşikâk','Bürûc','Târık','A\'lâ','Ğâşiye','Fecr','Beled','Şems','Leyl','Duhâ','İnşirâh','Tîn','Alak','Kadir','Beyyine','Zilzâl','Âdiyât','Kâria','Tekâsür','Asr','Hümeze','Fîl','Kureyş','Mâûn','Kevser','Kâfirûn','Nasr','Tebbet','İhlâs','Felak','Nâs'];
-        const SAJDA_AYATS = [[7,206],[13,15],[16,49],[17,107],[19,58],[22,18],[25,60],[27,25],[32,15],[38,24],[41,37],[53,62],[84,21],[96,19]];
-        const FONT_MAP = { uthmani:"'Amiri',serif", noto:"'Noto Naskh Arabic',serif", amiri:"'Amiri',serif", scheherazade:"'Scheherazade New',serif" };
 
         /* ================= METİN / DİL ================= */
         function updateTexts() {
@@ -324,6 +389,15 @@
             document.getElementById('latinBtn').textContent = T('latin');
             document.getElementById('sajdahHeaderBtn').textContent = T('sajdah');
             document.getElementById('settingsHeaderBtn').textContent = T('settings');
+            document.getElementById('surahBtn').textContent = T('surah');
+            document.getElementById('juzBtn').textContent = T('juz');
+            document.getElementById('searchBtn').textContent = T('search');
+            document.getElementById('searchTitleEl').textContent = T('searchTitle');
+            document.getElementById('searchInput').placeholder = T('searchPh');
+            document.getElementById('surahTitleEl').textContent = T('surahTitle');
+            document.getElementById('juzTitleEl').textContent = T('juzTitle');
+            document.getElementById('surahNoteEl').innerHTML = `<span class="sajda-mark">۩</span> = ${T('listNote').replace('۩ = ','')}`;
+            document.getElementById('juzNoteEl').innerHTML = `<span class="sajda-mark">۩</span> = ${T('listNote').replace('۩ = ','')}`;
             document.getElementById('speedLabel').textContent = T('speed');
             document.getElementById('mealSourceLabel').textContent = T('mealSource');
             document.getElementById('fontLabel').textContent = T('font');
@@ -336,12 +410,10 @@
             document.getElementById('styleLabel').textContent = T('style');
             document.getElementById('followLabel').textContent = T('follow');
             document.getElementById('followBtn').textContent = T('followDesc');
+            document.getElementById('offlineLabel').textContent = T('offline');
             updateBookmarkUI();
         }
-        function toggleLangMenu(e) {
-            e.stopPropagation();
-            document.getElementById('langMenu').classList.toggle('open');
-        }
+        function toggleLangMenu(e) { e.stopPropagation(); document.getElementById('langMenu').classList.toggle('open'); }
         document.addEventListener('click', () => document.getElementById('langMenu').classList.remove('open'));
         function setLang(lang) {
             currentLang = lang;
@@ -350,6 +422,60 @@
             document.getElementById('langMenu').classList.remove('open');
             updateTexts();
             showToast(T('langChanged'));
+        }
+
+        /* ================= ARAMA + SURE/CÜZ LİSTELERİ ================= */
+        function closeListPanels() {
+            ['searchPanel','surahPanel','juzPanel'].forEach(id => document.getElementById(id).style.display = 'none');
+        }
+        function toggleSearch() {
+            const p = document.getElementById('searchPanel');
+            const show = p.style.display === 'none';
+            closeListPanels();
+            p.style.display = show ? 'block' : 'none';
+            if (show) document.getElementById('searchInput').focus();
+        }
+        function toggleSurahList() {
+            const p = document.getElementById('surahPanel');
+            const show = p.style.display === 'none';
+            closeListPanels();
+            p.style.display = show ? 'block' : 'none';
+            if (show && !document.getElementById('surahContent').children.length) {
+                document.getElementById('surahContent').innerHTML = SURAH_TR.slice(1).map((name, i) => {
+                    const n = i + 1;
+                    const mark = SAJDA_SURAHS.includes(n) ? '<span class="sajda-mark">۩</span>' : '';
+                    return `<div class="list-item" onclick="goPage(${SURAH_PAGES[i]})"><span>${n}. ${name}</span><span>${mark} <small>S.${SURAH_PAGES[i]}</small></span></div>`;
+                }).join('');
+            }
+        }
+        function toggleJuzList() {
+            const p = document.getElementById('juzPanel');
+            const show = p.style.display === 'none';
+            closeListPanels();
+            p.style.display = show ? 'block' : 'none';
+            if (show && !document.getElementById('juzContent').children.length) {
+                document.getElementById('juzContent').innerHTML = JUZ_PAGES.map((pg, i) => {
+                    const n = i + 1;
+                    const mark = SAJDA_JUZ.includes(n) ? '<span class="sajda-mark">۩</span>' : '';
+                    return `<div class="list-item" onclick="goPage(${pg})"><span>Cüz ${n}</span><span>${mark} <small>S.${pg}</small></span></div>`;
+                }).join('');
+            }
+        }
+        function goPage(p) { closeListPanels(); loadPage(p); }
+        function doSearch() {
+            const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+            if (!q) return;
+            const jm = q.match(/(cüz|cuz|juz|jüz)\s*(\d{1,2})/);
+            if (jm) { const j = parseInt(jm[2]); if (j >= 1 && j <= 30) { goPage(JUZ_PAGES[j-1]); showToast(`📖 Cüz ${j} → S.${JUZ_PAGES[j-1]}`); return; } }
+            if (/^\d+$/.test(q)) {
+                const n = parseInt(q);
+                if (n >= 1 && n <= 114) { goPage(SURAH_PAGES[n-1]); showToast(`📚 ${SURAH_TR[n]} → S.${SURAH_PAGES[n-1]}`); return; }
+                if (n >= 1 && n <= 604) { goPage(n); return; }
+            }
+            for (let i = 1; i <= 114; i++) {
+                if (SURAH_TR[i].toLocaleLowerCase('tr').includes(q)) { goPage(SURAH_PAGES[i-1]); showToast(`📚 ${SURAH_TR[i]} → S.${SURAH_PAGES[i-1]}`); return; }
+            }
+            showToast(T('notFound'));
         }
 
         /* ================= TEMA + STİL ================= */
@@ -369,25 +495,17 @@
             const cont = document.getElementById('mushafContainer');
             if (mushafStyle === 'sepya') {
                 img.style.filter = 'sepia(1) contrast(1.05) brightness(0.97)';
-                cont.style.background = '#f3e3c3';
-                cont.style.borderColor = '#b98a2e';
+                cont.style.background = '#f3e3c3'; cont.style.borderColor = '#b98a2e';
             } else if (mushafStyle === 'negatif') {
                 img.style.filter = 'invert(1) hue-rotate(180deg)';
-                cont.style.background = '#0d1112';
-                cont.style.borderColor = '#3a917f';
+                cont.style.background = '#0d1112'; cont.style.borderColor = '#3a917f';
             } else {
                 img.style.filter = darkMode ? 'invert(1) hue-rotate(180deg)' : 'none';
                 cont.style.background = darkMode ? '#101413' : '';
                 cont.style.borderColor = darkMode ? '#2d7a6b' : '';
             }
         }
-        function setMushafStyle(st) {
-            mushafStyle = st;
-            localStorage.setItem('ersenbox_style', st);
-            updateActiveButtons('style', st);
-            applyMushafStyle();
-            showToast(T('styleSet', st));
-        }
+        function setMushafStyle(st) { mushafStyle = st; localStorage.setItem('ersenbox_style', st); updateActiveButtons('style', st); applyMushafStyle(); showToast(T('styleSet', st)); }
 
         /* ================= ZOOM ================= */
         function applyZoom() {
@@ -395,28 +513,17 @@
             document.getElementById('mushafImage').style.width = (zoom * 100) + '%';
             document.getElementById('zoomLabel').textContent = '%' + Math.round(zoom * 100);
         }
-        function zoomChange(d) {
-            zoom = Math.min(1.7, Math.max(0.7, Math.round((zoom + d) * 10) / 10));
-            localStorage.setItem('ersenbox_zoom', zoom);
-            applyZoom();
-        }
+        function zoomChange(d) { zoom = Math.min(1.7, Math.max(0.7, Math.round((zoom + d) * 10) / 10)); localStorage.setItem('ersenbox_zoom', zoom); applyZoom(); }
 
         /* ================= YER İMİ + SECDE ================= */
-        function saveBookmark() {
-            localStorage.setItem('ersenbox_bookmark', currentPage);
-            updateBookmarkUI();
-            showToast(T('bookmarkSaved', currentPage));
-        }
+        function saveBookmark() { localStorage.setItem('ersenbox_bookmark', currentPage); updateBookmarkUI(); showToast(T('bookmarkSaved', currentPage)); }
         function updateBookmarkUI() {
             const bm = localStorage.getItem('ersenbox_bookmark');
             const btn = document.getElementById('gotoBookmarkBtn');
             if (bm) { btn.style.display = 'inline-block'; btn.textContent = T('gotoBookmark', bm); }
             else btn.style.display = 'none';
         }
-        function gotoBookmark() {
-            const bm = parseInt(localStorage.getItem('ersenbox_bookmark'));
-            if (bm) loadPage(bm); else showToast(T('noBookmark'));
-        }
+        function gotoBookmark() { const bm = parseInt(localStorage.getItem('ersenbox_bookmark')); if (bm) loadPage(bm); else showToast(T('noBookmark')); }
         function showSajdaAyat() {
             const list = document.getElementById('sajdaList');
             const show = list.style.display === 'none';
@@ -434,7 +541,7 @@
             } catch(e) { showToast(T('loadError')); }
         }
 
-        /* ================= TECVİD ================= */
+        /* ================= TECVİD + TAKİP ================= */
         function colorTajweed(t) {
             const parts = [];
             const put = (cls, m) => { parts.push(`<span class="${cls}">${m}</span>`); return `\u0001${parts.length-1}\u0002`; };
@@ -451,8 +558,7 @@
                 `<div class="tajweed-ayah" data-idx="${i}"><span class="tajweed-num">${a.surah.number}:${a.numberInSurah}</span> ${colorTajweed(a.text)}</div>`).join('');
         }
         function toggleTajweed() {
-            settings.tajweed = !settings.tajweed;
-            saveSettings();
+            settings.tajweed = !settings.tajweed; saveSettings();
             document.getElementById('tajweedBtn').classList.toggle('active', settings.tajweed);
             document.getElementById('mushafContainer').style.display = settings.tajweed ? 'none' : 'flex';
             document.querySelector('.zoom-bar').style.display = settings.tajweed ? 'none' : 'flex';
@@ -460,11 +566,8 @@
             if (settings.tajweed) { renderTajweed(); if (!mealCache) loadMeal(currentPage); }
             showToast(settings.tajweed ? T('tajweedOn') : T('tajweedOff'));
         }
-
-        /* ================= TAKİP (VURGU) ================= */
         function toggleFollow() {
-            settings.follow = !settings.follow;
-            saveSettings();
+            settings.follow = !settings.follow; saveSettings();
             document.getElementById('followBtn').classList.toggle('active', settings.follow);
             if (settings.follow) highlightAyah(currentAyahIndex);
             else document.querySelectorAll('.playing').forEach(el => el.classList.remove('playing'));
@@ -480,7 +583,7 @@
         }
 
         /* ================= AYARLAR ================= */
-        function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
+        function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); updateOfflineStatus(); }
         function updateActiveButtons(group, value) {
             document.querySelectorAll(`[data-group="${group}"]`).forEach(b =>
                 b.classList.toggle('active', String(b.dataset.value) === String(value)));
@@ -490,30 +593,70 @@
                 `<button class="setting-option" data-group="reciter" data-value="${id}" onclick="setReciter('${id}')">${RECITERS[id].name}</button>`).join('');
             updateActiveButtons('reciter', settings.reciter);
         }
-        function setMeal(meal) {
-            settings.meal = meal; saveSettings();
-            updateActiveButtons('meal', meal);
-            document.getElementById('mealContainer').style.display = 'block';
-            loadMeal(currentPage);
-            showToast(T('mealSet', meal));
+        function setMeal(meal) { settings.meal = meal; saveSettings(); updateActiveButtons('meal', meal); document.getElementById('mealContainer').style.display = 'block'; loadMeal(currentPage); showToast(T('mealSet', meal)); }
+        function setReciter(reciter) { settings.reciter = reciter; saveSettings(); updateActiveButtons('reciter', reciter); if (isPlaying) playAyah(currentAyahIndex); showToast(T('reciterSet', RECITERS[reciter].name)); }
+        function setSpeed(speed) { settings.speed = speed; saveSettings(); document.getElementById('audioEl').playbackRate = speed; updateActiveButtons('speed', speed); showToast(T('speedSet', speed)); }
+        function setFont(font) { settings.font = font; saveSettings(); document.documentElement.style.setProperty('--arabic-font', FONT_MAP[font] || FONT_MAP.uthmani); updateActiveButtons('font', font); showToast(T('fontSet', font)); }
+        function setOfflineQuality(q) { offlineQuality = q; localStorage.setItem('ersenbox_oq', q); updateActiveButtons('oq', q); showToast(q === 'ekonomi' ? '🪶 Ekonomik mod (az yer kaplar)' : '💎 Yüksek kalite'); }
+
+        /* ================= OFFLINE ================= */
+        async function fetchAndCache(url) { try { const r = await fetch(url); return r.ok || r.type === 'opaque'; } catch(e) { return false; } }
+        async function cacheAudioForAyah(ayahNumber) {
+            const rec = RECITERS[settings.reciter] || { br:[64] };
+            const list = offlineQuality === 'ekonomi' ? [64] : rec.br;
+            for (const br of list) { if (await fetchAndCache(`https://cdn.islamic.network/quran/audio/${br}/${settings.reciter}/${ayahNumber}.mp3`)) return true; }
+            return false;
         }
-        function setReciter(reciter) {
-            settings.reciter = reciter; saveSettings();
-            updateActiveButtons('reciter', reciter);
-            if (isPlaying) playAyah(currentAyahIndex);
-            showToast(T('reciterSet', RECITERS[reciter].name));
+        async function downloadPageOffline(n) {
+            const imgUrl = offlineQuality === 'ekonomi' ? pageSources(n)[1] : pageSources(n)[0];
+            await fetchAndCache(imgUrl);
+            let ayahs = [];
+            try {
+                const r = await fetch(`https://api.alquran.cloud/v1/page/${n}/quran-uthmani`);
+                const d = await r.json();
+                if (d.code === 200) ayahs = d.data.ayahs;
+            } catch(e) {}
+            await fetchAndCache(`https://api.alquran.cloud/v1/page/${n}/${settings.meal}`);
+            await fetchAndCache(`https://api.alquran.cloud/v1/page/${n}/en.transliteration`);
+            for (const a of ayahs) { await cacheAudioForAyah(a.number); }
         }
-        function setSpeed(speed) {
-            settings.speed = speed; saveSettings();
-            document.getElementById('audioEl').playbackRate = speed;
-            updateActiveButtons('speed', speed);
-            showToast(T('speedSet', speed));
+        async function downloadPageOfflineUI() {
+            if (!navigator.onLine) { showToast('❌ İnternet yok'); return; }
+            showToast(`📥 Sayfa ${currentPage} indiriliyor...`);
+            await downloadPageOffline(currentPage);
+            showToast(`✅ Sayfa ${currentPage} offline hazır`);
+            updateOfflineStatus();
         }
-        function setFont(font) {
-            settings.font = font; saveSettings();
-            document.documentElement.style.setProperty('--arabic-font', FONT_MAP[font] || FONT_MAP.uthmani);
-            updateActiveButtons('font', font);
-            showToast(T('fontSet', font));
+        async function downloadRangeOffline(s, e) {
+            if (offlineBusy) { showToast('⏳ Zaten indirme sürüyor'); return; }
+            if (!navigator.onLine) { showToast('❌ İnternet yok'); return; }
+            offlineBusy = true; offlineCancel = false;
+            const total = e - s + 1;
+            for (let n = s; n <= e; n++) {
+                if (offlineCancel) { showToast('⛔ İptal edildi'); break; }
+                await downloadPageOffline(n);
+                const p = Math.round(((n - s + 1) / total) * 100);
+                document.getElementById('offlineBar').style.width = p + '%';
+                document.getElementById('offlineStatus').textContent = `⬇️ ${n}/${e} (%${p})`;
+                if (n % 5 === 0) updateOfflineStatus();
+            }
+            offlineBusy = false;
+            if (!offlineCancel) showToast('✅ Offline indirme tamamlandı');
+            updateOfflineStatus();
+        }
+        function cancelOffline() { offlineCancel = true; }
+        async function clearAllCache() {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(k => caches.delete(k)));
+            updateOfflineStatus();
+            showToast('🗑️ Önbellek temizlendi — alan geri kazanıldı');
+        }
+        async function updateOfflineStatus() {
+            const el = document.getElementById('offlineStatus');
+            try {
+                const est = await navigator.storage.estimate();
+                el.textContent = `💾 Kullanılan: ${(est.usage/1048576).toFixed(1)} MB / Kota: ${(est.quota/1048576).toFixed(0)} MB`;
+            } catch(e) {}
         }
 
         /* ================= TÜRKÇE OKUNUŞ ================= */
@@ -592,14 +735,8 @@
             }).join('');
         }
 
-        /* ================= LATİNCE ================= */
-        function setLatinMode(mode) {
-            latinMode = mode;
-            localStorage.setItem('ersenbox_latinmode', mode);
-            updateActiveButtons('latinmode', mode);
-            lastLatinPage = 0;
-            loadLatin(currentPage);
-        }
+        /* ================= LATİNCE (aç/kapa) ================= */
+        function setLatinMode(mode) { latinMode = mode; localStorage.setItem('ersenbox_latinmode', mode); updateActiveButtons('latinmode', mode); lastLatinPage = 0; loadLatin(currentPage); }
         async function loadLatin(pageNum) {
             const content = document.getElementById('latinContent');
             content.innerHTML = `<p style="text-align:center;color:var(--muted);">${T('loading')}</p>`;
@@ -634,10 +771,7 @@
             document.getElementById('latinBtn').classList.toggle('on', latinVisible);
             if (latinVisible && lastLatinPage !== currentPage) loadLatin(currentPage);
         }
-        function toggleMeal() {
-            const c = document.getElementById('mealContainer');
-            c.style.display = c.style.display === 'none' ? 'block' : 'none';
-        }
+        function toggleMeal() { const c = document.getElementById('mealContainer'); c.style.display = c.style.display === 'none' ? 'block' : 'none'; }
 
         /* ================= SAYFA YÜKLEME ================= */
         const pad3 = n => String(n).padStart(3, '0');
@@ -682,8 +816,7 @@
                 loader.style.display = 'none';
                 img.style.display = 'block';
                 img.classList.add('loaded');
-                applyZoom();
-                applyMushafStyle();
+                applyZoom(); applyMushafStyle();
                 showToast(T('loaded', pageNum));
                 prefetchNeighbors(pageNum);
             };
@@ -696,7 +829,7 @@
         function nextPage() { if (currentPage < totalPages) loadPage(currentPage + 1); }
         function previousPage() { if (currentPage > 1) loadPage(currentPage - 1); }
 
-        /* ================= SES (bitrate yedekli) ================= */
+        /* ================= SES ================= */
         function toggleAudio() {
             const p = document.getElementById('audioPlayer');
             p.style.display = p.style.display === 'none' ? 'block' : 'none';
@@ -704,13 +837,12 @@
         }
         function playAyah(index) {
             if (index < 0 || index >= pageAyahs.length) return;
-            currentAyahIndex = index;
-            brIndex = 0;
+            currentAyahIndex = index; brIndex = 0;
             setAudioSrc();
             highlightAyah(index);
         }
         function setAudioSrc() {
-            const rec = RECITERS[settings.reciter] || { br:[128,64,192] };
+            const rec = RECITERS[settings.reciter] || { br:[128,64] };
             const ayah = pageAyahs[currentAyahIndex];
             const br = rec.br[Math.min(brIndex, rec.br.length - 1)];
             const audio = document.getElementById('audioEl');
@@ -754,9 +886,10 @@
             const ref = a ? ` ${a.surah.number}:${a.numberInSurah}` : '';
             document.getElementById('audioInfo').textContent = `${RECITERS[settings.reciter] ? RECITERS[settings.reciter].name : ''}${ref} - ${f(t.currentTime)} / ${f(d)}`;
         });
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.error('[SW]', err));
-        }
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(err => console.error('[SW]', err));
+        if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+        window.addEventListener('online', () => showToast('🟢 İnternet bağlandı'));
+        window.addEventListener('offline', () => showToast('🔴 Çevrimdışı mod — indirilen sayfalar çalışır'));
 
         applyDark();
         document.getElementById('langBtn').textContent = FLAG[currentLang];
@@ -766,6 +899,7 @@
         updateActiveButtons('font', settings.font);
         updateActiveButtons('style', mushafStyle);
         updateActiveButtons('latinmode', latinMode);
+        updateActiveButtons('oq', offlineQuality);
         document.getElementById('tajweedBtn').classList.toggle('active', !!settings.tajweed);
         document.getElementById('followBtn').classList.toggle('active', !!settings.follow);
         document.documentElement.style.setProperty('--arabic-font', FONT_MAP[settings.font] || FONT_MAP.uthmani);
@@ -777,6 +911,7 @@
         if (latinVisible) { document.getElementById('latinContainer').style.display = 'block'; document.getElementById('latinBtn').classList.add('on'); }
         applyZoom();
         updateTexts();
+        updateOfflineStatus();
 
         const savedPage = parseInt(localStorage.getItem('ersenbox_lastPage')) || 1;
         loadPage(savedPage);
