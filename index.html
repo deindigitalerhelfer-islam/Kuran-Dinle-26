@@ -133,7 +133,56 @@
         .ded-footer p { max-width:700px; margin:0 auto; line-height:1.8; font-size:14px; }
         .ded-footer .fatiha { color:#e58abe; font-weight:bold; margin:16px 0; }
         .ded-footer .copy { display:inline-block; border:1px solid #4a443c; border-radius:20px; padding:8px 18px; font-size:12px; margin-top:10px; }
-        @media (max-width:768px) { .main-content{padding:10px;} header h1{font-size:18px;} .header-btn{padding:6px 10px;font-size:12px;} .nav-btn{padding:10px 16px;font-size:14px;} .action-btn{padding:12px 20px;font-size:14px;} }
+        /* Mobile: <= 480px */
+        @media (max-width:480px) { 
+            .main-content{padding:8px;} 
+            header h1{font-size:16px;margin-bottom:8px;} 
+            .header-btn{padding:6px 8px;font-size:11px;gap:3px;} 
+            .nav-btn{padding:8px 14px;font-size:12px;} 
+            .action-btn{padding:10px 16px;font-size:13px;} 
+            .install-banner{bottom:8px;right:8px;max-width:280px;padding:10px 14px;font-size:13px;}
+            .mushaf-container{padding:12px;min-height:250px;}
+            .list-grid{grid-template-columns:1fr;}
+            .header-buttons{gap:4px;}
+        }
+        /* Tablet: 481px - 768px */
+        @media (min-width:481px) and (max-width:768px) { 
+            .main-content{padding:10px;} 
+            header h1{font-size:18px;} 
+            .header-btn{padding:6px 10px;font-size:12px;} 
+            .nav-btn{padding:10px 16px;font-size:14px;} 
+            .action-btn{padding:12px 20px;font-size:14px;}
+            .install-banner{max-width:300px;}
+            .list-grid{grid-template-columns:repeat(2,1fr);}
+        }
+        /* Tablet Landscape: 769px - 1024px */
+        @media (min-width:769px) and (max-width:1024px) { 
+            .main-content{padding:15px;} 
+            header h1{font-size:20px;} 
+            .header-btn{padding:8px 12px;font-size:13px;} 
+            .nav-btn{padding:11px 18px;font-size:15px;} 
+            .action-btn{padding:13px 22px;font-size:15px;}
+            .list-grid{grid-template-columns:repeat(3,1fr);}
+        }
+        /* Desktop: > 1024px */
+        @media (min-width:1025px) { 
+            .header-btn{padding:8px 14px;font-size:14px;} 
+            .nav-btn{padding:12px 24px;font-size:16px;} 
+            .action-btn{padding:15px 30px;font-size:16px;}
+            .list-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+        }
+        /* Orientation Portrait */
+        @media (orientation:portrait) and (max-height:600px) {
+            .main-content{padding:8px;}
+            header{padding:12px;}
+            .install-banner{bottom:10px;right:10px;}
+        }
+        /* Orientation Landscape */
+        @media (orientation:landscape) and (max-height:500px) {
+            header h1{margin-bottom:5px;font-size:16px;}
+            .header-buttons{gap:3px;}
+            .header-btn{padding:5px 8px;font-size:11px;}
+        }
     </style>
 </head>
 <body>
@@ -157,6 +206,7 @@
                 <button class="header-btn" id="bookmarkBtn" onclick="saveBookmark()">🔖</button>
                 <button class="header-btn" id="sajdahHeaderBtn" onclick="showSajdaAyat()">۩ Secde</button>
                 <button class="header-btn" id="qrBtn" onclick="toggleQR()">📱 QR</button>
+                <button class="header-btn" id="shareBtn" onclick="shareApp()" title="Uygulamayı paylaş">🔗 Paylaş</button>
                 <button class="header-btn" id="installBtn" onclick="installApp()" style="display:none;">📲 Kur</button>
                 <button class="header-btn" id="infoBtn" onclick="toggleInfo()">ℹ️ Info</button>
                 <button class="header-btn" id="settingsHeaderBtn" onclick="toggleSettings()">⚙️ Ayarlar</button>
@@ -530,22 +580,91 @@
         }
 
         /* ================= E2: PWA INSTALL ================= */
+        let installShown = false;
+        
+        function detectPlatform() {
+            const ua = navigator.userAgent.toLowerCase();
+            if (/iphone|ipad|ipod/.test(ua)) return 'iOS';
+            if (/android/.test(ua)) return 'Android';
+            if (/windows|win32|win64/.test(ua)) return 'Windows';
+            if (/mac|macos|osx/.test(ua)) return 'macOS';
+            return 'Unknown';
+        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'flex';
-            document.getElementById('installBanner').classList.add('show');
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!installShown) {
+                installShown = true;
+                setTimeout(() => {
+                    document.getElementById('installBtn').style.display = 'flex';
+                    document.getElementById('installBanner').classList.add('show');
+                }, 1000);
+            }
         });
-        window.addEventListener('appinstalled', () => { showToast('✅ Uygulama yüklendi'); hideInstallBanner(); });
-        function hideInstallBanner() { document.getElementById('installBanner').classList.remove('show'); }
+        
+        window.addEventListener('appinstalled', () => {
+            showToast('✅ Uygulama yüklendi');
+            hideInstallBanner();
+            deferredPrompt = null;
+            installShown = false;
+        });
+        
+        function hideInstallBanner() {
+            document.getElementById('installBanner').classList.remove('show');
+        }
+        
         async function installApp() {
             if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const c = await deferredPrompt.userChoice;
-                if (c.outcome === 'accepted') showToast('✅ Yüklendi');
-                deferredPrompt = null; hideInstallBanner();
+                try {
+                    deferredPrompt.prompt();
+                    const choiceResult = await deferredPrompt.userChoice;
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast('✅ Uygulama yüklendi');
+                    } else {
+                        showToast('❌ Yükleme iptal edildi');
+                    }
+                    deferredPrompt = null;
+                    hideInstallBanner();
+                } catch (err) {
+                    console.error('Install error:', err);
+                    showFallbackInstall();
+                }
             } else {
-                const iOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-                showToast(iOS ? '📱 Safari → Paylaş → Ana Ekrana Ekle' : 'ℹ️ Tarayıcı menüsü → "Ana ekrana ekle"');
+                showFallbackInstall();
+            }
+        }
+        
+        function showFallbackInstall() {
+            const platform = detectPlatform();
+            const messages = {
+                iOS: '📱 Safari menüsü → Paylaş → Ana Ekrana Ekle',
+                Android: '📱 Chrome/Firefox menüsü → "Ana ekrana ekle" veya "Install"',
+                Windows: '💻 Chrome/Edge menüsü → "Uygulamayı yükle"',
+                macOS: '💻 Safari/Chrome menüsü → Paylaş → Ana Ekrana Ekle'
+            };
+            const msg = messages[platform] || messages.Android;
+            showToast(msg);
+        }
+
+        /* ================= PAYLAŞ ================= */
+        async function shareApp() {
+            const shareData = {
+                title: 'Ersenbox Kur\'an-Dinle 26',
+                text: 'Kur\'an-ı Kerim okuma ve dinleme uygulaması - PWA',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.log('Share error:', err));
+            } else {
+                const msg = `Ersenbox Kur'an-Dinle 26: ${window.location.href}`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(msg).then(() => showToast('📋 Bağlantı kopyalandı'));
+                }
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                const emailUrl = `mailto:?subject=Ersenbox Kur'an-Dinle 26&body=${encodeURIComponent(msg)}`;
+                const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=Ersenbox%20Kur'an-Dinle%2026`;
+                alert('Paylaş seçenekleri:\n\n📱 WhatsApp: ' + whatsappUrl + '\n📧 Email: ' + emailUrl + '\n✈️ Telegram: ' + telegramUrl);
             }
         }
 
